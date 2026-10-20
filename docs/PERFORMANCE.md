@@ -52,9 +52,24 @@ completa acima mostrou valores iguais, então a primeira diferença era ruído.
 | `com.google.android.tvrecommendations` (fileiras de fábrica) | 12–19 MB |
 | CleanTV Início (esta edição), em uso | 57–61 MB |
 
-**Estimativa** (não medida com a troca feita): usar o CleanTV Início como tela inicial e desativar a de fábrica
-libera algo como 70–80 MB de memória residente. Isso só se confirma medindo depois da troca (etapa ainda
-pendente, ver `docs/CHECKLIST.md`).
+## Com o CleanTV como tela inicial (medido, 1 amostra)
+
+Tela de fábrica desativada por ADB, TV reiniciada, medição aos 3 minutos de uptime — o mesmo ponto da linha de
+base do diagnóstico (19/10, tela de fábrica):
+
+| Métrica aos ~3 min após o boot | Tela de fábrica (19/10) | CleanTV Início (20/10) |
+|---|---|---|
+| Swap em ZRAM | 347 MB | 319 MB |
+| Used RAM | 924 MB | 939 MB |
+| Free RAM | 260 MB | 220 MB |
+| Mortes pelo LMK desde o boot | 30 (em ~6 min) | 32 (em ~3 min) |
+| `tvlauncher` rodando | sim (117 MB PSS logo depois) | **não** |
+| Primeiro `onResume` da tela inicial no boot | — | 3.667 ms |
+
+**Leitura honesta:** com uma amostra de cada lado, em dias e estados diferentes, **não dá para afirmar ganho de
+memória**. O swap ficou 28 MB menor, mas a RAM usada e as mortes pelo LMK ficaram no mesmo patamar: outros
+processos ocupam o espaço liberado (`tvrecommendations` continua ativo, 16 MB). O que é certo é que o processo de
+117 MB da tela de fábrica não roda mais. Uma comparação válida exige várias reinicializações de cada lado.
 
 ## Limitações dos testes
 

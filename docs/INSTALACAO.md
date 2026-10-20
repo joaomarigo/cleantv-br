@@ -96,6 +96,19 @@ não foi verificado).
 
 Só faça isto depois de ter usado o CleanTV Início como app comum e confirmado que ele funciona.
 
+Com o script (faz os passos abaixo na ordem certa e desfaz sozinho se o HOME não cair no CleanTV):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\tela-inicial.ps1 -TvHost 192.168.1.50 -Adb C:\caminho\adb.exe -Ativar
+```
+
+**Testado na TV de referência (2026-10-20):** HOME passou a resolver para `com.gathin.tvhome`; o botão Início
+(tecla simulada por ADB) abriu o CleanTV a partir das Configurações e do YouTube; depois de reiniciar a TV o
+HOME continuou no CleanTV e o botão Início o abriu. Observação: logo após o boot esta TV abre a **TV ao vivo**
+(o sintonizador sobe sozinho); o Início leva ao CleanTV em seguida.
+
+Comandos manuais equivalentes:
+
 ```bash
 # 1) Abra o novo launcher e defina a preferência
 adb shell am start -n com.gathin.tvhome/.MainActivity
@@ -122,6 +135,15 @@ Na TV de referência (Android TV 14, não Google TV) ele **não** aparece entre 
 ## 7. Voltar à tela inicial original
 
 Pelo computador (sempre funciona enquanto a depuração estiver ligada):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\tela-inicial.ps1 -TvHost 192.168.1.50 -Adb C:\caminho\adb.exe -Restaurar
+```
+
+**Testado na TV de referência:** depois de `-Restaurar`, o botão Início voltou a abrir a Android TV Home. Sem
+parâmetros, o script só mostra o estado atual.
+
+Comandos manuais equivalentes:
 
 ```bash
 adb shell pm enable com.google.android.tvlauncher

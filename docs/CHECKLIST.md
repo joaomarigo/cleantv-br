@@ -49,7 +49,7 @@ capturas de tela (`launcher/app/build/tv-teste/`, fora do git).
 ## Desempenho
 - [x] Medição comparativa original × BR — `docs/PERFORMANCE.md`, `tools/medir-launcher.ps1`
 - [x] Resultado registrado sem exagero: diferença dentro do ruído; hipótese de 1,4 s corrigida
-- [!] Memória/swap com o CleanTV como tela inicial de verdade — depende da troca (ADB)
+- [x] Memória/swap com o CleanTV como tela inicial — 1 amostra pós-boot medida (`docs/PERFORMANCE.md`); sem ganho conclusivo
 
 ## Segurança
 - [x] Ação `LAUNCHER_SETTINGS` só com token interno — código; abrir pelo painel rápido continua funcionando no código, **não exercitado na TV** (painel só aparece com `settings_key_panel`)
@@ -61,7 +61,8 @@ capturas de tela (`launcher/app/build/tv-teste/`, fora do git).
 - [x] Instala no Android TV 14 32 bits sem bloqueio — `pm install` → `Success`
 - [x] Atalhos do sistema só quando existem; "Imagem e som" no lugar de "Imagem" — `20-config-3.png`
 - [x] Pedido oficial de tela inicial (`RoleManager`) — diálogo do sistema exibido e aceito
-- [!] **Botão Início continua indo para a tela de fábrica** mesmo com o papel concedido (prioridade 2) — `docs/COMPATIBILIDADE.md`
+- [!] Pedido oficial sozinho não troca o botão Início nesta TV (prioridade 2) — `docs/COMPATIBILIDADE.md`
+- [x] Caminho por ADB troca o botão Início — `tools/tela-inicial.ps1 -Ativar`, HOME → `com.gathin.tvhome`
 
 ## Testes
 - [x] 107 testes de unidade, 0 falhas (`testDebugUnitTest`)
@@ -76,9 +77,14 @@ capturas de tela (`launcher/app/build/tv-teste/`, fora do git).
 ## Instalação
 - [x] `launcher/instalar-app.ps1` instala sem mexer na tela inicial — executado 4 vezes na TV
 - [x] `docs/INSTALACAO.md`: compilar, instalar, permissões, tela inicial, testar, voltar, diagnosticar, desinstalar
-- [!] Caminho por ADB (desativar `tvlauncher`) e volta — documentado, **não executado** (exige sua autorização)
+- [x] Caminho por ADB (desativar `tvlauncher`) — executado 2× (manual e script), com reversão automática embutida
+- [x] Volta à tela de fábrica — executada 2× (manual e `-Restaurar`); Início voltou à Android TV Home
+- [x] `tools/tela-inicial.ps1` testado em ciclo completo (estado → restaurar → ativar)
 
 ## Validação em TV física
 - [x] Todos os itens marcados acima como verificados na TV
-- [!] Uso como tela inicial após reinicialização da TV — depende do caminho por ADB
+- [x] Tela inicial após reiniciar a TV — HOME continuou no CleanTV; Início o abriu (`32-home-pos-boot.png`)
+- [x] Botão Início (tecla simulada) a partir de Configurações e YouTube abre o CleanTV
+- [!] Botão Início do **controle físico** — confirmar pessoalmente (testes usaram KEYCODE_HOME via ADB)
+- [!] TV ligou na TV ao vivo após o boot; não verificado se acontece com a tela de fábrica
 - [!] Uso por vários dias (estabilidade em sessão longa)

@@ -65,3 +65,7 @@ Base: CleanYourTV `main` @ `69c93b6` (launcher 2.4, versionCode 5). Branch: `br/
 
 ### Testes
 - Novos: `AppSearchTest`, `LaunchStatsTest`, `ConfigChoicesTest` (15 testes). Total: 107 testes, 0 falhas.
+
+### Tela inicial (testado na TV de referência)
+- `tools/tela-inicial.ps1`: `-Ativar` desativa a tela de fábrica e define o CleanTV (com reversão automática se o HOME não cair nele); `-Restaurar` faz a volta; sem parâmetros mostra o estado.
+- Testado: troca, botão Início, reinício da TV e volta.
