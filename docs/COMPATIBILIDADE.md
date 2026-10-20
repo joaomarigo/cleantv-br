@@ -39,6 +39,7 @@ Resultados de instalação e uso nesta TV: ver `docs/CHECKLIST.md` (seção *Val
 | Limitação | Origem | Contorno |
 |---|---|---|
 | Instalar o APK não troca a tela inicial | sistema: o launcher de fábrica tem prioridade 2, apps instalados no máximo 0 | pedido oficial pela tela de configurações; se não bastar, ADB (`docs/INSTALACAO.md`, 5.2) |
+| **Na TV de referência, o pedido oficial não basta** (testado) | o papel `HOME` foi concedido ao launcher, mas o HOME continua resolvendo para `tvlauncher` (prioridade 2) | só o caminho por ADB (desativar a tela de fábrica); ainda **não testado** nesta TV |
 | Desativar o launcher de fábrica sem computador | não há API pública | ADB |
 | Reiniciar/desligar a TV pelo launcher | exige permissão de sistema (`REBOOT`) | usar o menu da TV |
 | "Mais usados"/"Recentes" só contam aberturas feitas pelo launcher | ler o uso de outros apps exige `PACKAGE_USAGE_STATS` | escolha deliberada (privacidade e menor privilégio) |

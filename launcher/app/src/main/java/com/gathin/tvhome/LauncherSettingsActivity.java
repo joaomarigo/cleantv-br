@@ -260,6 +260,10 @@ public final class LauncherSettingsActivity extends Activity {
         if (homeStatus == null) return;
         if (SystemShortcuts.isCurrentHome(this)) {
             homeStatus.setText(R.string.home_is_this);
+        } else if (SystemShortcuts.roleHeldButOverridden(this)) {
+            CharSequence current = SystemShortcuts.currentHomeLabel(this);
+            homeStatus.setText(getString(R.string.home_role_overridden,
+                    current != null ? current : getString(R.string.home_factory)));
         } else {
             CharSequence current = SystemShortcuts.currentHomeLabel(this);
             homeStatus.setText(current == null ? getString(R.string.home_is_chooser)
@@ -276,7 +280,8 @@ public final class LauncherSettingsActivity extends Activity {
             Toast.makeText(this, R.string.home_is_this, Toast.LENGTH_SHORT).show();
             return;
         }
-        Intent request = SystemShortcuts.homeRequest(this);
+        // Already chosen in Android, but the factory launcher outranks the choice: asking again changes nothing.
+        Intent request = SystemShortcuts.roleHeldButOverridden(this) ? null : SystemShortcuts.homeRequest(this);
         if (request != null) {
             try {
                 if (Settings.ACTION_HOME_SETTINGS.equals(request.getAction())) {

@@ -51,6 +51,16 @@ final class SystemShortcuts {
     }
 
     /**
+     * Android granted this launcher the Home role, yet the Home button still goes elsewhere: a preinstalled
+     * launcher with a higher HOME priority wins over the role (seen on the reference Android TV 14 set).
+     */
+    static boolean roleHeldButOverridden(Context ctx) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || isCurrentHome(ctx)) return false;
+        RoleManager roles = ctx.getSystemService(RoleManager.class);
+        return roles != null && roles.isRoleAvailable(RoleManager.ROLE_HOME) && roles.isRoleHeld(RoleManager.ROLE_HOME);
+    }
+
+    /**
      * The best official way to ask for this launcher to become Home: Android 10+'s role request (a system
      * dialog), else the system's Home picker; null when this TV offers neither. Whether the choice beats a
      * preinstalled launcher with a higher priority is up to the firmware; see docs/INSTALACAO.md.

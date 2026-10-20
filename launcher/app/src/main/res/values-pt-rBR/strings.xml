@@ -133,6 +133,8 @@
     <string name="home_is_this">Este launcher é a tela inicial padrão.</string>
     <string name="home_is_other">O botão Início abre: %1$s</string>
     <string name="home_is_chooser">A TV pergunta qual tela inicial usar.</string>
+    <string name="home_role_overridden">O Android já registrou este launcher como tela inicial padrão, mas o botão Início continua abrindo %1$s: a tela de fábrica da TV tem prioridade. Veja docs/INSTALACAO.md, seção 5.2.</string>
+    <string name="home_factory">a tela inicial de fábrica</string>
     <string name="home_picker_hint">Escolha este launcher na lista e depois aperte Início no controle.</string>
     <string name="home_manual_body">Esta TV não oferece aos apps uma forma de escolher a tela inicial. A tela inicial original continua com o botão Início até ser desativada pelo computador, via ADB. O passo a passo e a forma de voltar estão em docs/INSTALACAO.md.</string>
     <string name="reset_defaults">Restaurar configurações padrão</string>

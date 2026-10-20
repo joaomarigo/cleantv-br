@@ -132,6 +132,8 @@
     <string name="home_is_this">This launcher is the default Home.</string>
     <string name="home_is_other">The Home button opens: %1$s</string>
     <string name="home_is_chooser">The TV asks which Home to use.</string>
+    <string name="home_role_overridden">Android has this launcher as the default Home, but the Home button still opens %1$s: the TV\'s own launcher has priority. See docs/INSTALACAO.md, section 5.2.</string>
+    <string name="home_factory">the factory launcher</string>
     <string name="home_picker_hint">Choose this launcher in the list, then press Home.</string>
     <string name="home_manual_body">This TV offers no Home picker to apps. Its original launcher keeps the Home button until it is disabled over ADB from a computer. The steps and the way back are in docs/INSTALACAO.md.</string>
     <string name="reset_defaults">Restore default settings</string>

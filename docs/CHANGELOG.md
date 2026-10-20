@@ -28,6 +28,18 @@ Base: CleanYourTV `main` @ `69c93b6` (launcher 2.4, versionCode 5). Branch: `br/
 - Atalhos do sistema só aparecem se a TV tiver a tela; "Imagem e som" quando não há tela de Imagem.
 - Novas chaves de configuração: `show_greeting`, `grid_sort` (também em `config.json` de temas).
 
+### Correções encontradas nos testes na TV
+- Início com o foco no botão "Todos os apps" do rodapé voltava ao rodapé; agora vai ao 1º app (defeito do original).
+- `focusTile` esperava para sempre uma rolagem que não começava quando o bloco ainda não estava montado
+  (o foco caía num bloco qualquer); agora aplica o foco assim que o bloco aparece (defeito do original).
+- Todos os apps esconde componentes de fábrica que só têm entrada de celular (ex.: "HotKeyService").
+- Todos os apps lembra a ordenação escolhida.
+- Data da Home em duas linhas em pt-BR (cortava ao lado dos 4 botões).
+- Interruptores em pt-BR com Sim/Não (concordância).
+- Diálogo Restaurar começa em Cancelar.
+- Quando o Android concede o papel de tela inicial mas a tela de fábrica continua com o botão Início, as
+  configurações explicam isso e não reabrem o pedido.
+
 ### Localização
 - `values-pt-rBR/strings.xml` completo (126/126 textos), revisado para o português do Brasil.
 - `values-pt-rBR/config_br.xml`: dock com Netflix, YouTube, Globoplay e Prime Video; botão Apps ligado.

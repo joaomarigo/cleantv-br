@@ -81,8 +81,16 @@ A mesma tela mostra qual app o botão Início abre agora.
 
 **Limitação comum em Android TV:** a tela inicial de fábrica (`com.google.android.tvlauncher`) declara
 **prioridade 2** no filtro HOME; apps instalados ficam limitados à prioridade 0. Em muitos firmwares isso faz o
-botão Início continuar indo para a tela de fábrica mesmo depois da escolha. O resultado na TV de referência
-está em `docs/COMPATIBILIDADE.md`.
+botão Início continuar indo para a tela de fábrica mesmo depois da escolha.
+
+**Resultado na TV de referência (Philco/Caixun, Android TV 14), 2026-10-20:** o diálogo do sistema
+"Definir CleanTV Início como seu app de início padrão?" apareceu e a escolha foi aceita
+(`cmd role get-role-holders android.app.role.HOME` → `com.gathin.tvhome`), **mas o botão Início continuou
+abrindo a Android TV Home**. Nesta TV, portanto, o caminho oficial não basta; a tela de configurações do
+launcher passa a explicar isso. A escolha feita fica registrada e não atrapalha. Para desfazê-la, abra a lista de
+telas iniciais do sistema e escolha a Android TV Home:
+`adb shell am start -a android.settings.HOME_SETTINGS` (a tela existe nesta TV; o caminho dela pelos menus
+não foi verificado).
 
 ### 5.2 Caminho manual (ADB), quando o oficial não basta
 
