@@ -1,3 +1,6 @@
+> 🇧🇷 **Edição brasileira (fork):** launcher em português do Brasil, busca, Todos os apps e mais —
+> veja [README-pt-BR.md](README-pt-BR.md). Projeto original: [Gathin23/cleanyourtv](https://github.com/Gathin23/cleanyourtv).
+
 <p align="center">
   <a href="https://cleanyour.tv"><img src="https://raw.githubusercontent.com/Gathin23/cleanyourtv/main/docs/banner.png" alt="CleanYourTV. Your TV, minus the ads." width="800"></a>
 </p>

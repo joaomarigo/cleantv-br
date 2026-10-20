@@ -1,7 +1,7 @@
 # Checklist
 
 `[x]` concluído e verificado · `[ ]` pendente · `[!]` bloqueado ou dependente de validação externa.
-TV = Philco/Caixun `martin`, Android TV 14, `192.168.1.50`, testes de 2026-10-20 com teclas simuladas por ADB e
+TV = Philco/Caixun `martin`, Android TV 14 (rede local), testes de 2026-10-20 com teclas simuladas por ADB e
 capturas de tela (`launcher/app/build/tv-teste/`, fora do git).
 
 ## Auditoria
