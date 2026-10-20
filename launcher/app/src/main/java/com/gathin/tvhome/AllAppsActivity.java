@@ -72,6 +72,7 @@ public final class AllAppsActivity extends Activity {
     }
 
     private static final int SORT_ALPHA = 0, SORT_USAGE = 1, SORT_RECENT = 2;
+    private static final String SORT_KEY = "all_apps_sort";
     private final ExecutorService loader = Executors.newSingleThreadExecutor();
     private final Handler main = new Handler(Looper.getMainLooper());
     private final Map<String, Drawable> icons = new HashMap<>();
@@ -112,10 +113,14 @@ public final class AllAppsActivity extends Activity {
         sortChoices[SORT_ALPHA] = findViewById(R.id.sortAlpha);
         sortChoices[SORT_USAGE] = findViewById(R.id.sortUsage);
         sortChoices[SORT_RECENT] = findViewById(R.id.sortRecent);
+        // The last order chosen here is kept for next time (a view preference, not a Home setting).
+        android.content.SharedPreferences prefs = getSharedPreferences(Config.SETTINGS_NAME, MODE_PRIVATE);
+        sort = Math.max(SORT_ALPHA, Math.min(SORT_RECENT, prefs.getInt(SORT_KEY, SORT_ALPHA)));
         for (int i = 0; i < sortChoices.length; i++) {
             final int which = i;
             sortChoices[i].setOnClickListener(v -> {
                 sort = which;
+                prefs.edit().putInt(SORT_KEY, which).apply();
                 showSortChoice();
                 applyFilter();
             });
@@ -254,6 +259,9 @@ public final class AllAppsActivity extends Activity {
                 if (info.activityInfo == null || !info.activityInfo.exported) continue;
                 String pkg = info.activityInfo.packageName;
                 if (pkg.equals(self) || unique.containsKey(pkg)) continue;
+                // A preinstalled app with only a phone entry is a vendor service stub on TVs (a "HotKeyService" on
+                // the reference MediaTek set), not something to open. Phone apps the owner installed stay listed.
+                if (!tv && isFactoryApp(info.activityInfo.applicationInfo)) continue;
                 String label;
                 try {
                     label = Cards.cleanLabel(String.valueOf(info.loadLabel(pm)), pkg);
@@ -270,6 +278,12 @@ public final class AllAppsActivity extends Activity {
             }
         }
         return new ArrayList<>(unique.values());
+    }
+
+    /** Part of the system image and never updated from a store. */
+    static boolean isFactoryApp(android.content.pm.ApplicationInfo app) {
+        return app != null && (app.flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0
+                && (app.flags & android.content.pm.ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) == 0;
     }
 
     /** Whether the app has a tile on Home: the same rule AppAdapter applies. */

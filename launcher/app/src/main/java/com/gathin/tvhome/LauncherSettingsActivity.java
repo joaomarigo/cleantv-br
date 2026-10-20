@@ -113,16 +113,20 @@ public final class LauncherSettingsActivity extends Activity {
         systemRow(R.string.device_info, new Intent(Settings.ACTION_DEVICE_INFO_SETTINGS));
 
         header(R.string.settings_section_reset);
-        row(R.string.reset_defaults, () -> new AlertDialog.Builder(this)
-                .setTitle(R.string.reset_defaults)
-                .setMessage(R.string.reset_defaults_confirm)
-                .setPositiveButton(R.string.reset_defaults_ok, (d, w) -> {
-                    Config.clearChoices(choices);
-                    changed();
-                    Toast.makeText(this, R.string.reset_defaults_done, Toast.LENGTH_SHORT).show();
-                })
-                .setNegativeButton(android.R.string.cancel, null)
-                .show());
+        row(R.string.reset_defaults, () -> {
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle(R.string.reset_defaults)
+                    .setMessage(R.string.reset_defaults_confirm)
+                    .setPositiveButton(R.string.reset_defaults_ok, (d, w) -> {
+                        Config.clearChoices(choices);
+                        changed();
+                        Toast.makeText(this, R.string.reset_defaults_done, Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show();
+            // Start on Cancel: an OK pressed once too often must not wipe the choices.
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).requestFocus();
+        });
         hint(R.string.reset_defaults_hint);
 
         refresh();

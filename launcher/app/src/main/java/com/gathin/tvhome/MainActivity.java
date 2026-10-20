@@ -188,6 +188,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean fillDockLeavesSlots;
     /** The menu of a held tile (Open, Move, Remove from Home, App info) while it is open. */
     private PopupWindow tileMenu;
+    /** Home was pressed while Home was in front: the next rebuild focuses the first tile, whatever had focus. */
+    private boolean homePressed;
     private boolean libraryFocusPending;
     private RecyclerView.OnScrollListener pendingFocusScroll;
 
@@ -568,6 +570,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (openLauncherSettingsIfAsked(intent)) return;
         if (intent == null || !intent.hasCategory(Intent.CATEGORY_HOME)) return;
         grid.scrollToPosition(0);
+        // Home goes to the first tile even from the All apps button at the end of the grid.
+        homePressed = true;
+        libraryFocusPending = false;
         lastFocused = 0;
         lastFocusedKey = adapter.getItemCount() > 0 ? adapter.keyAt(0) : null;
         rebuildOnResume = true;
@@ -623,7 +628,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private void reloadApps(boolean animate) {
         cancelPendingFocusScroll();
         RecyclerView.ViewHolder footer = grid.findViewHolderForAdapterPosition(adapter.appCount());
-        final boolean restoreLibrary = adapter.isLibraryAt(adapter.appCount()) && footer != null
+        final boolean wasHomePressed = homePressed;
+        homePressed = false;
+        final boolean restoreLibrary = !wasHomePressed && adapter.isLibraryAt(adapter.appCount()) && footer != null
                 && footer.itemView.findViewById(R.id.btnLibrary) != null
                 && footer.itemView.findViewById(R.id.btnLibrary).hasFocus();
         // Capture the app before rebinding can move focus and overwrite its key.
@@ -1549,7 +1556,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             });
             return;
         }
-        pendingFocusScroll = new RecyclerView.OnScrollListener() {
+        final RecyclerView.OnScrollListener waitForScroll = new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView rv, int newState) {
                 if (newState != RecyclerView.SCROLL_STATE_IDLE) return;
@@ -1561,8 +1568,19 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 if (target != null) target.requestFocus();
             }
         };
-        grid.addOnScrollListener(pendingFocusScroll);
+        pendingFocusScroll = waitForScroll;
+        grid.addOnScrollListener(waitForScroll);
         grid.smoothScrollToPosition(pos);
+        // The tile may just not be laid out yet (a scrollToPosition waiting for layout, Home pressed): then there is
+        // nothing to scroll, no idle state ever arrives, and focus stayed wherever it had fallen. Finish it by hand.
+        grid.postOnAnimation(() -> {
+            if (pendingFocusScroll != waitForScroll || grid.getScrollState() != RecyclerView.SCROLL_STATE_IDLE) return;
+            RecyclerView.ViewHolder h = grid.findViewHolderForAdapterPosition(pos);
+            if (h == null) return;   // still to be laid out or scrolled to: the listener takes over
+            grid.removeOnScrollListener(waitForScroll);
+            pendingFocusScroll = null;
+            h.itemView.findViewById(R.id.card).requestFocus();
+        });
     }
 
     // ---- top bar ---------------------------------------------------------------------------------
