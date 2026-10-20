@@ -55,8 +55,6 @@
     <string name="advanced_effects">Effets avancés</string>
     <string name="advanced_effects_state">Effets avancés : %1$s</string>
     <string name="advanced_effects_warning">Soulève les tuiles, agrandit les icônes et adoucit les transitions de couleur. Peut augmenter la mémoire utilisée selon le téléviseur.</string>
-    <string name="follow_theme">Suivre le thème (réinitialiser les choix)</string>
-    <string name="follow_theme_hint">Utilise la disposition et les animations du thème actuel ou les valeurs intégrées. Appliquer ou réinitialiser un thème efface aussi ces choix.</string>
     <string name="tv_settings">Paramètres du téléviseur</string>
     <string name="on">Activé</string>
     <string name="off">Désactivé</string>
@@ -72,8 +70,6 @@
     <string name="library_open">Ouvrir</string>
     <string name="library_app_info">Infos sur l’application</string>
     <string name="library_save_failed">Impossible d’enregistrer le raccourci</string>
-    <string name="library_recent">Nouvelle · Ajouter à l’accueil</string>
-    <string name="library_hint_add">Appuyer : ajouter à Accueil · Maintenir : options</string>
     <string name="library_hint_open">Appuyer : ouvrir · Maintenir : options</string>
     <plurals name="library_app_count">
         <item quantity="one">%1$d application</item>

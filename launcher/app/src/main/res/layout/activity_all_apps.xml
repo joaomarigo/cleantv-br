@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- All apps: title and count, a search field with the three orders beside it, then the grid. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FF0B0E12"
+    android:paddingStart="56dp"
+    android:paddingEnd="56dp"
+    android:paddingTop="28dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="true">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/all_apps"
+            android:textColor="#FFFFFFFF"
+            android:textSize="34sp"
+            android:fontFamily="@font/outfit_light"
+            android:includeFontPadding="false"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#A6FFFFFF"
+            android:textSize="15sp"
+            android:fontFamily="@font/outfit_regular" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <EditText
+            android:id="@+id/search"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_weight="1"
+            android:background="@drawable/pill_bg"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="10dp"
+            android:drawableTint="@drawable/pill_text"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:hint="@string/search_hint"
+            android:textColorHint="@drawable/pill_text_dim"
+            android:textColor="@drawable/pill_text"
+            android:textSize="16sp"
+            android:fontFamily="@font/outfit_regular"
+            android:importantForAutofill="no"
+            android:inputType="text|textNoSuggestions"
+            android:imeOptions="actionSearch|flagNoExtractUi"
+            android:singleLine="true"
+            android:nextFocusDown="@+id/appGrid" />
+
+        <TextView
+            android:id="@+id/sortAlpha"
+            style="@style/TopButton"
+            android:text="@string/sort_alpha"
+            android:nextFocusDown="@+id/appGrid" />
+
+        <TextView
+            android:id="@+id/sortUsage"
+            style="@style/TopButton"
+            android:text="@string/sort_usage"
+            android:nextFocusDown="@+id/appGrid" />
+
+        <TextView
+            android:id="@+id/sortRecent"
+            style="@style/TopButton"
+            android:text="@string/sort_recent"
+            android:nextFocusDown="@+id/appGrid" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="4dp"
+        android:text="@string/library_hint_open"
+        android:textColor="#8CFFFFFF"
+        android:textSize="13sp"
+        android:fontFamily="@font/outfit_regular"
+        android:singleLine="true"
+        android:ellipsize="end" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="6dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/appGrid"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="12dp"
+            android:paddingBottom="28dp"
+            android:clipToPadding="false"
+            android:clipChildren="false"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            android:descendantFocusability="afterDescendants" />
+
+        <TextView
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:gravity="center"
+            android:textColor="#BFFFFFFF"
+            android:textSize="18sp"
+            android:fontFamily="@font/outfit_regular"
+            android:visibility="gone" />
+    </FrameLayout>
+</LinearLayout>

@@ -14,13 +14,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.function.IntPredicate;
 
 /** Home shortcut choices made from the library, separate from theme defaults and tile ordering. */
 final class LibraryApps {
     static final int MAX_ADDED = 128;
     private static final long RECENT_MS = 7L * 24 * 60 * 60 * 1000;
     private static final int MAX_BYTES = MAX_ADDED * 256;
+    /** Bumped on every saved change in this process, so Home knows to rebuild its tiles when it comes back. */
+    static volatile int revision;
 
     private LibraryApps() { }
 
@@ -67,6 +68,7 @@ final class LibraryApps {
             Log.w("TvHome.Library", "Keeping unreadable shortcut choices unchanged", e);
             return false;
         }
+        revision++;
         if (onHome) {
             if (!write(store(context, false), additions, pkg, true)) return false;
             return !removed.contains(pkg) || write(store(context, true), removed, pkg, false);
@@ -103,26 +105,6 @@ final class LibraryApps {
 
     static boolean recent(long installedAt, long now) {
         return installedAt > 0 && installedAt <= now && now - installedAt <= RECENT_MS;
-    }
-
-    /** Missing shortcuts first; recent installs lead that group. The caller sorts ties by label. */
-    static int comparePriority(boolean homeA, long installedA, boolean homeB, long installedB, long now) {
-        if (homeA != homeB) return homeA ? 1 : -1;
-        if (homeA) return 0;
-        boolean recentA = recent(installedA, now), recentB = recent(installedB, now);
-        if (recentA != recentB) return recentA ? -1 : 1;
-        return recentA ? Long.compare(installedB, installedA) : 0;
-    }
-
-    /** After adding a shortcut, prefer another missing app; otherwise stay by a neighbour. */
-    static int nextFocus(int current, int count, IntPredicate missing) {
-        if (count <= 0) return -1;
-        current = Math.max(0, Math.min(current, count - 1));
-        for (int step = 1; step < count; step++) {
-            int candidate = (current + step) % count;
-            if (missing.test(candidate)) return candidate;
-        }
-        return current + 1 < count ? current + 1 : Math.max(0, current - 1);
     }
 
     static Set<String> change(Set<String> saved, String pkg, boolean added) {

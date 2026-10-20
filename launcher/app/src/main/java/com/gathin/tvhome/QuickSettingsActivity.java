@@ -26,14 +26,17 @@ public final class QuickSettingsActivity extends Activity {
         findViewById(R.id.scrim).setOnClickListener(v -> finish());
         LinearLayout rows = findViewById(R.id.rows);
         addRow(rows, R.drawable.ic_settings, R.string.tv_settings, 0, new Intent(Settings.ACTION_SETTINGS));
-        addRow(rows, R.drawable.ic_picture, R.string.quick_picture, 0, new Intent(Settings.ACTION_DISPLAY_SETTINGS));
+        // Many Android TV builds have no separate Display screen; picture lives under Display & sound there.
+        Intent picture = SystemShortcuts.picture(this);
+        if (picture != null) addRow(rows, R.drawable.ic_picture, SystemShortcuts.pictureTitle(picture), 0, picture);
         addRow(rows, R.drawable.ic_wifi, R.string.quick_network, 0, new Intent(Settings.ACTION_WIFI_SETTINGS));
         addRow(rows, R.drawable.ic_apps, R.string.quick_apps, R.string.quick_apps_hint,
                 new Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS));
         // Through Home, so it rebuilds with the new choices when Launcher settings closes.
         addRow(rows, R.drawable.ic_home_settings, R.string.launcher_settings, 0,
-                new Intent(this, MainActivity.class).setAction(MainActivity.ACTION_LAUNCHER_SETTINGS));
-        rows.getChildAt(0).requestFocus();
+                new Intent(this, MainActivity.class).setAction(MainActivity.ACTION_LAUNCHER_SETTINGS)
+                        .putExtra(MainActivity.EXTRA_TOKEN, MainActivity.INTERNAL_TOKEN));
+        if (rows.getChildCount() > 0) rows.getChildAt(0).requestFocus();
     }
 
     /** Settings pressed again while the panel is up. */
@@ -51,7 +54,9 @@ public final class QuickSettingsActivity extends Activity {
         overridePendingTransition(0, 0);
     }
 
+    /** Adds a row, unless nothing on this TV answers the intent (then the row would only show an error). */
     private void addRow(LinearLayout rows, int icon, int title, int status, Intent target) {
+        if (target.getComponent() == null && target.resolveActivity(getPackageManager()) == null) return;
         View row = getLayoutInflater().inflate(R.layout.item_input, rows, false);
         ((ImageView) row.findViewById(R.id.icon)).setImageResource(icon);
         ((TextView) row.findViewById(R.id.title)).setText(title);

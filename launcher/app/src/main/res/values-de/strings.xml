@@ -32,8 +32,6 @@
     <string name="advanced_effects">Erweiterte Effekte</string>
     <string name="advanced_effects_state">Erweiterte Effekte: %1$s</string>
     <string name="advanced_effects_warning">Hebt Kacheln an, vergrößert Symbole und glättet Farbübergänge. Kann den Speicherverbrauch erhöhen; die Wirkung hängt vom TV ab.</string>
-    <string name="follow_theme">Design übernehmen (TV-Auswahl zurücksetzen)</string>
-    <string name="follow_theme_hint">Verwendet Layout und Bewegung des aktuellen Designs oder der integrierten Einstellungen. Ein neues oder zurückgesetztes Design löscht die TV-Auswahl ebenfalls.</string>
     <string name="tv_settings">TV-Systemeinstellungen</string>
     <string name="on">Ein</string>
     <string name="off">Aus</string>
@@ -49,8 +47,6 @@
     <string name="library_open">Öffnen</string>
     <string name="library_app_info">App-Info</string>
     <string name="library_save_failed">Verknüpfung konnte nicht gespeichert werden</string>
-    <string name="library_recent">Neu · Zum Startbildschirm</string>
-    <string name="library_hint_add">Drücken: zu Start hinzufügen · Halten: Optionen</string>
     <string name="library_hint_open">Drücken: öffnen · Halten: Optionen</string>
     <plurals name="library_app_count">
         <item quantity="one">%1$d App</item>

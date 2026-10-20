@@ -85,6 +85,19 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private static final int LAUNCHER_SETTINGS_REQUEST = 42;
     /** Sent by QuickSettingsActivity: open Launcher settings from here so Home rebuilds when they close. */
     static final String ACTION_LAUNCHER_SETTINGS = "com.gathin.tvhome.action.LAUNCHER_SETTINGS";
+    /**
+     * This activity is exported (it has to be, to be Home), so any app could send ACTION_LAUNCHER_SETTINGS. Only
+     * a request carrying this token, which exists only in this process, is honoured.
+     */
+    static final String EXTRA_TOKEN = "com.gathin.tvhome.extra.TOKEN";
+    static final String INTERNAL_TOKEN = java.util.UUID.randomUUID().toString();
+    /**
+     * PackageManager's change sequence at the last tile rebuild: Home rebuilds on return only when an app was
+     * installed, updated or removed since (or a shortcut was added or removed, see LibraryApps.revision).
+     * -1 until the first rebuild.
+     */
+    private int packageSequence = -1;
+    private int libraryRevision = -1;
     /** Tiles per row and dock slots (res/values/config.xml, columns). Set in onCreate. */
     static int COLUMNS = 4;
     private boolean rtlAppGrid;
@@ -173,7 +186,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private List<String> dockApps;
     /** fill_dock false: the dock can have empty slots, which reorder mode leaves out and restores afterwards. */
     private boolean fillDockLeavesSlots;
-    private AppLibraryDialog appLibrary;
+    /** The menu of a held tile (Open, Move, Remove from Home, App info) while it is open. */
+    private PopupWindow tileMenu;
     private boolean libraryFocusPending;
     private RecyclerView.OnScrollListener pendingFocusScroll;
 
@@ -222,7 +236,6 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             if (Intent.ACTION_PACKAGE_REMOVED.equals(intent.getAction())
                     && intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) return;
             reloadApps(false);
-            if (appLibrary != null) appLibrary.refresh();
         }
     };
     private final Runnable minuteTick = new Runnable() {
@@ -273,6 +286,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (!cfg.dockTitle) heroName.setVisibility(View.GONE);
         greeting = findViewById(R.id.greeting);
         greetingColor = greeting.getCurrentTextColor();
+        if (!cfg.showGreeting) greeting.setVisibility(View.GONE);
         btnWifi = findViewById(R.id.btnWifi);
         shamsiDate = findViewById(R.id.shamsiDate);
         stats = findViewById(R.id.stats);
@@ -434,6 +448,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         btnReorder = findViewById(R.id.btnReorder);
         btnReorder.setOnClickListener(v -> toggleReorder());
         btnReorder.setVisibility(cfg.reorderButton ? View.VISIBLE : View.GONE);
+        View btnApps = findViewById(R.id.btnApps);
+        btnApps.setOnClickListener(v -> onLibraryRequested());
+        btnApps.setVisibility(cfg.appLibrary ? View.VISIBLE : View.GONE);
         btnSettings.setOnLongClickListener(v -> {
             showSettingsMenu();
             return true;
@@ -460,8 +477,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         btnWifi.setOnKeyListener(pillKeys);
         btnSettings.setOnKeyListener(pillKeys);
         btnReorder.setOnKeyListener(pillKeys);
+        btnApps.setOnKeyListener(pillKeys);
         if (advancedEffects) {
-            for (View button : new View[]{btnInputs, btnWifi, btnReorder, btnSettings}) {
+            for (View button : new View[]{btnInputs, btnWifi, btnApps, btnReorder, btnSettings}) {
                 button.setOnFocusChangeListener((view, focused) -> view.animate()
                         .scaleX(focused ? 1.04f : 1f).scaleY(focused ? 1.04f : 1f)
                         .setDuration(160).start());
@@ -497,6 +515,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean openLauncherSettingsIfAsked(Intent intent) {
         if (intent == null || !ACTION_LAUNCHER_SETTINGS.equals(intent.getAction())) return false;
         setIntent(new Intent(Intent.ACTION_MAIN));
+        // From another app: treated as a plain start of Home.
+        if (!INTERNAL_TOKEN.equals(intent.getStringExtra(EXTRA_TOKEN))) return false;
         startActivityForResult(new Intent(this, LauncherSettingsActivity.class), LAUNCHER_SETTINGS_REQUEST);
         return true;
     }
@@ -609,7 +629,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         // Capture the app before rebinding can move focus and overwrite its key.
         final String returnKey = lastFocusedKey;
         final int returnSlot = lastFocused;
-        final boolean restoreFocus = appLibrary == null && (animate || grid.hasFocus());
+        final boolean restoreFocus = animate || grid.hasFocus();
         if (restoreFocus) {
             glassShown = false;
             glass.setAlpha(0f);
@@ -617,8 +637,14 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             heroName.setAlpha(0f);
             ambient.setAlpha(0f);
         }
-        reloadTiles();
-        if (animate && animations && !reducedMotion) grid.scheduleLayoutAnimation();
+        // Coming back from an app with nothing installed or removed meanwhile: the tiles are still right, so
+        // skip re-reading every app's label and banner on the main thread (about 1.4 s on a 1 GB TV).
+        boolean stale = tilesStale();
+        if (stale) reloadTiles();
+        if (animate && animations && !reducedMotion) {
+            grid.scheduleLayoutAnimation();
+            if (!stale) grid.requestLayout();   // the entrance plays on the next layout, which a rebuild would cause
+        }
 
         if (restoreFocus) {
             // Keep a focused footer at the end even when the app count changes.
@@ -641,8 +667,32 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
      * Every step into the card code runs under CardFeature: if it fails, the tiles are the ordinary
      * ones and cards stay off for this process.
      */
+    /** Whether an app was installed, updated or removed, or a Home shortcut changed, since the last rebuild. */
+    private boolean tilesStale() {
+        if (packageSequence < 0 || libraryRevision != LibraryApps.revision) return true;
+        try {
+            android.content.pm.ChangedPackages changed = getPackageManager().getChangedPackages(packageSequence);
+            return changed != null && !changed.getPackageNames().isEmpty();
+        } catch (RuntimeException e) {
+            return true;   // no answer from the system: rebuild, as the original launcher always did
+        }
+    }
+
+    /** Notes the package change sequence the tiles now reflect. */
+    private void rememberPackageSequence() {
+        libraryRevision = LibraryApps.revision;
+        try {
+            android.content.pm.ChangedPackages changed = getPackageManager().getChangedPackages(Math.max(0, packageSequence));
+            if (changed != null) packageSequence = changed.getSequenceNumber();
+            else if (packageSequence < 0) packageSequence = 0;
+        } catch (RuntimeException e) {
+            packageSequence = -1;
+        }
+    }
+
     private void reloadTiles() {
         if (reordering) endReorder();   // an app installed or removed while reordering: keep the order so far
+        rememberPackageSequence();
         // Read these before reload(): rebinding can move focus to the first tile and overwrite them.
         final String returnKey = lastFocusedKey;
         final int returnSlot = lastFocused;
@@ -683,7 +733,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         cancelPendingFocusScroll();
         // Nothing of ours stays on screen over another app; an undecided prompt simply returns next time.
         if (cardPrompt != null) cardPrompt.dismiss();
-        if (appLibrary != null) appLibrary.close();
+        if (tileMenu != null) tileMenu.dismiss();
         if (openPopup != null) openPopup.dismiss();
     }
 
@@ -698,7 +748,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
-            if (libraryFocusPending && appLibrary == null) focusLibrary();
+            if (libraryFocusPending) focusLibrary();
             showCardPrompt();
         }
     }
@@ -748,6 +798,13 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (handleSettingsKey(event)) return true;
+        if (!reordering && event.getKeyCode() == KeyEvent.KEYCODE_MENU) {
+            int pos = focusedTilePosition();
+            if (pos >= 0) {
+                if (event.getAction() == KeyEvent.ACTION_UP) onTileLongPressed(pos, getCurrentFocus());
+                return true;
+            }
+        }
         if (!reordering) return super.dispatchKeyEvent(event);
         boolean down = event.getAction() == KeyEvent.ACTION_DOWN;
         int code = event.getKeyCode();
@@ -917,21 +974,51 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     // ---- glass highlight -------------------------------------------------------------------------
 
+    /** The All apps screen (footer button or the Apps pill). Shortcuts changed there rebuild Home on return. */
     @Override
     public void onLibraryRequested() {
-        if (appLibrary != null) appLibrary.close();
         if (openPopup != null) openPopup.dismiss();
-        libraryFocusPending = false;
-        appLibrary = new AppLibraryDialog(this, animations, reducedMotion, adapter::containsPackage, () -> reloadApps(false), () -> {
-            appLibrary = null;
-            openPopup = null;
-            libraryFocusPending = true;
-            grid.post(() -> {
-                if (libraryFocusPending && appLibrary == null && hasWindowFocus() && !isFinishing()) focusLibrary();
+        if (tileMenu != null) tileMenu.dismiss();
+        try {
+            startActivity(new Intent(this, AllAppsActivity.class));
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, R.string.not_available, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Hold OK (or press Menu) on a tile: Open, Move (reorder mode with this tile picked up), Remove from Home and
+     * App info. Removing only hides the tile; All apps can add it back.
+     */
+    @Override
+    public void onTileLongPressed(int position, View card) {
+        if (reordering || position < 0 || position >= adapter.appCount()) return;
+        AppAdapter.Entry e = adapter.entryAt(position);
+        if (e == null || e.kind == AppAdapter.Entry.EMPTY) return;
+        if (e.kind == AppAdapter.Entry.HOME_SETTINGS) {
+            adapter.launchAt(position, card);
+            return;
+        }
+        if (tileMenu != null) tileMenu.dismiss();
+        ActionMenu menu = new ActionMenu(this).add(R.string.library_open, () -> adapter.launchAt(position, card));
+        if (position < adapter.movableCount() && adapter.movableCount() > 1) {
+            menu.add(R.string.tile_move, () -> {
+                toggleReorder();
+                if (reordering) pickUp(adapter.positionOf(e.component.flattenToShortString()));
             });
+        }
+        menu.add(R.string.library_remove_shortcut, () -> {
+            if (!LibraryApps.save(this, e.pkg, false)) {
+                Toast.makeText(this, R.string.library_save_failed, Toast.LENGTH_LONG).show();
+                return;
+            }
+            Toast.makeText(this, getString(R.string.removed_from_home_hint, e.label), Toast.LENGTH_LONG).show();
+            reloadApps(false);
+            focusTile(Math.min(position, adapter.appCount() - 1));
         });
-        openPopup = appLibrary.popup;
-        appLibrary.show();
+        menu.add(R.string.library_app_info, () -> AllAppsActivity.openAppInfo(this, e.pkg, e.label));
+        tileMenu = menu.show(card);
+        tileMenu.setOnDismissListener(() -> tileMenu = null);
     }
 
     @Override
@@ -1406,7 +1493,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (!animations) {
             grid.scrollToPosition(position);
             grid.post(() -> {
-                if (appLibrary != null || !hasWindowFocus()) return;
+                if (!hasWindowFocus()) return;
                 RecyclerView.ViewHolder footer = grid.findViewHolderForAdapterPosition(adapter.appCount());
                 if (footer != null && adapter.isLibraryAt(adapter.appCount())
                         && footer.itemView.findViewById(R.id.btnLibrary).requestFocus()) libraryFocusPending = false;

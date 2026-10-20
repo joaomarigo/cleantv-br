@@ -35,10 +35,11 @@
     <string name="advanced_effects">Advanced effects</string>
     <string name="advanced_effects_state">Advanced effects: %1$s</string>
     <string name="advanced_effects_warning">Adds a lifted tile, icon zoom and smooth colour transitions. May increase memory use; the actual difference depends on your TV.</string>
-    <string name="follow_theme">Follow theme (reset on-TV choices)</string>
-    <string name="follow_theme_hint">Uses the current theme or built-in layout and motion settings. Pushing or resetting a theme also clears your on-TV choices.</string>
     <string name="tv_settings">TV system settings</string>
     <string name="quick_picture">Display</string>
+    <!-- TVs with no separate Display screen: the Sound action opens Display & sound. -->
+    <string name="quick_picture_sound">Picture &amp; sound</string>
+    <string name="device_info">About this TV</string>
     <string name="quick_network">Network</string>
     <string name="quick_apps">Apps</string>
     <string name="quick_apps_hint">Re-enable</string>
@@ -78,8 +79,6 @@
     <string name="library_open">Open</string>
     <string name="library_app_info">App info</string>
     <string name="library_save_failed">Could not save the shortcut</string>
-    <string name="library_recent">New · Add to Home</string>
-    <string name="library_hint_add">Press to add to Home · Hold for options</string>
     <string name="library_hint_open">Press to open · Hold for options</string>
     <plurals name="library_app_count">
         <item quantity="one">%1$d app</item>
@@ -87,4 +86,57 @@
     </plurals>
     <!-- The greeting, then greeting_name: "Good morning, Mr. Trịnh". -->
     <string name="greeting_with_name">%1$s, %2$s</string>
+
+    <!-- All apps screen and the Apps pill. -->
+    <string name="apps">Apps</string>
+    <string name="all_apps">All apps</string>
+    <string name="search_hint">Search apps</string>
+    <string name="sort_alpha">A–Z</string>
+    <string name="sort_usage">Most used</string>
+    <string name="sort_recent">Recent</string>
+    <string name="search_no_results">No apps match \"%1$s\"</string>
+    <string name="badge_new">New</string>
+    <string name="a11y_app_on_home">%1$s, on Home</string>
+    <string name="added_to_home">%1$s added to Home</string>
+    <string name="removed_from_home">%1$s removed from Home</string>
+    <string name="removed_from_home_hint">%1$s removed from Home. Add it back from Apps.</string>
+
+    <!-- Menu of a held tile on Home. -->
+    <string name="tile_move">Move</string>
+
+    <!-- Launcher settings. -->
+    <string name="setting_state">%1$s: %2$s</string>
+    <string name="settings_section_home">Home screen</string>
+    <string name="settings_section_look">Appearance</string>
+    <string name="settings_section_default_home">Default Home</string>
+    <string name="settings_section_system">TV settings</string>
+    <string name="settings_section_reset">Restore</string>
+    <string name="rows_below_dock_label">Rows visible below the dock</string>
+    <string name="dock_row_label">Dock as its own row</string>
+    <string name="dock_title_label">Large app name above the dock</string>
+    <string name="grid_sort_label">Order of the other apps</string>
+    <string name="grid_sort_hint">Most used counts only apps opened from this launcher. An order you set with Reorder comes first. The order updates the next time Home reloads.</string>
+    <string name="app_library_label">Apps button (all apps and search)</string>
+    <string name="greeting_label">Greeting</string>
+    <string name="stats_label">CPU, memory and storage line</string>
+    <string name="background_label">Background colour</string>
+    <string name="background_black">Black</string>
+    <string name="background_graphite">Graphite</string>
+    <string name="background_navy">Night blue</string>
+    <string name="sky_label">Sky that follows the time of day</string>
+    <string name="sky_soft">Soft</string>
+    <string name="sky_strong">Strong</string>
+    <string name="reduced_motion_label">Reduced motion</string>
+    <string name="reduced_motion_hint">Shorter movements without bounce. Recommended for TVs with 1 GB of memory.</string>
+    <string name="make_default_home">Make this the default Home</string>
+    <string name="home_is_this">This launcher is the default Home.</string>
+    <string name="home_is_other">The Home button opens: %1$s</string>
+    <string name="home_is_chooser">The TV asks which Home to use.</string>
+    <string name="home_picker_hint">Choose this launcher in the list, then press Home.</string>
+    <string name="home_manual_body">This TV offers no Home picker to apps. Its original launcher keeps the Home button until it is disabled over ADB from a computer. The steps and the way back are in docs/INSTALACAO.md.</string>
+    <string name="reset_defaults">Restore default settings</string>
+    <string name="reset_defaults_confirm">Return every option on this screen to its default? Your app order and Home shortcuts stay as they are.</string>
+    <string name="reset_defaults_ok">Restore</string>
+    <string name="reset_defaults_done">Default settings restored</string>
+    <string name="reset_defaults_hint">Uses the theme or built-in settings again. Pushing or resetting a theme also clears these choices.</string>
 </resources>

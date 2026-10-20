@@ -29,8 +29,6 @@
     <string name="advanced_effects">Efectos avanzados</string>
     <string name="advanced_effects_state">Efectos avanzados: %1$s</string>
     <string name="advanced_effects_warning">Eleva las tarjetas, amplía los iconos y suaviza los cambios de color. Puede aumentar el uso de memoria; depende del televisor.</string>
-    <string name="follow_theme">Seguir el tema (restablecer ajustes)</string>
-    <string name="follow_theme_hint">Usa el diseño y los efectos del tema actual o los valores integrados. Aplicar o restablecer un tema también borra estos ajustes.</string>
     <string name="tv_settings">Ajustes del televisor</string>
     <string name="on">Sí</string>
     <string name="off">No</string>
@@ -46,8 +44,6 @@
     <string name="library_open">Abrir</string>
     <string name="library_app_info">Información de la aplicación</string>
     <string name="library_save_failed">No se pudo guardar el acceso directo</string>
-    <string name="library_recent">Nueva · Añadir a Inicio</string>
-    <string name="library_hint_add">Pulsa para añadir a Inicio · Mantén para opciones</string>
     <string name="library_hint_open">Pulsa para abrir · Mantén para opciones</string>
     <plurals name="library_app_count">
         <item quantity="one">%1$d aplicación</item>

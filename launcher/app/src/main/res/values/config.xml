@@ -116,6 +116,14 @@
          "show_stats": true. Nothing is read, and the clock does not move, while this is false. -->
     <bool name="show_stats">false</bool>
 
+    <!-- The greeting line above the clock ("Good morning"). false hides it; a theme can set "show_greeting". -->
+    <bool name="show_greeting">true</bool>
+
+    <!-- Order of the grid apps after the dock (a saved order from Reorder always wins): "alpha" sorts by name,
+         "usage" puts the apps opened most often from this launcher first. The launcher counts only its own
+         launches; it never reads other apps' usage. A theme can set "grid_sort". -->
+    <string name="grid_sort" translatable="false">alpha</string>
+
     <!-- Time-of-day backdrop behind everything: a dark gradient that follows the clock, with a warm
          horizon glow around sunrise and sunset. 0 keeps the plain background (the default); 1 to 100
          sets its opacity. Around 60 reads clearly without hiding a wallpaper. Can also be set with

@@ -35,6 +35,20 @@ final class Config {
     private static final String THEME_REVISION_NAME = "theme_revision";
     private static final String THEME_SIGNATURE_KEY = "theme_signature";
 
+    /**
+     * Every choice LauncherSettingsActivity can store on the TV. A theme push or reset, and "Restore defaults",
+     * clear all of them, so the theme or config.xml applies again.
+     */
+    static final String[] CHOICE_KEYS = {
+            "columns", "animations", "advanced_effects", "reduced_motion", "rows_below_dock", "dock_row",
+            "dock_title", "grid_sort", "app_library", "show_greeting", "show_stats", "background", "sky_intensity",
+    };
+    /** grid_sort values: alphabetical (the original order) or by how often apps were opened from this launcher. */
+    static final String SORT_ALPHA = "alpha", SORT_USAGE = "usage";
+    /** background values and the colour each stands for. */
+    static final String[] BACKGROUND_NAMES = {"black", "graphite", "navy"};
+    static final int[] BACKGROUND_COLORS = {0xFF000000, 0xFF14171C, 0xFF0B1424};
+
     final List<String> dockApps;
     /** Grid apps fill the dock slots dock_apps leaves free (config.xml, fill_dock); on by default, false leaves the slots empty. */
     final boolean fillDock;
@@ -80,6 +94,10 @@ final class Config {
     final boolean overlayApplied;
     /** Festive skin from a theme (festival, festival_until, greeting, accent_color); {@link Festival#NONE} if none. */
     final Festival festival;
+    /** The greeting above the clock (config.xml show_greeting); false hides the line. */
+    final boolean showGreeting;
+    /** Grid apps after the dock: {@link #SORT_ALPHA} or {@link #SORT_USAGE} (config.xml grid_sort). */
+    final String gridSort;
 
     private Config(List<String> dockApps, boolean fillDock, List<String> hiddenApps, String liveTvPackage,
                    String liveTvAction, String sourcePanelService, String sourcePanelAction, String inputAction,
@@ -87,7 +105,9 @@ final class Config {
                    boolean shamsiDate, String greetingName, boolean moduleCards, boolean reducedMotion, boolean dockTitle, boolean dockRow, boolean reorderButton, String vpnApp,
                    boolean showHomeSettingsShortcut, boolean showStats, boolean appLibrary, int backgroundColor, int skyIntensity,
                    int[] settingsKeycodes, boolean settingsKeyPanel, File wallpaper, boolean overlayApplied,
-                   Festival festival) {
+                   Festival festival, boolean showGreeting, String gridSort) {
+        this.showGreeting = showGreeting;
+        this.gridSort = gridSort;
         this.dockApps = Collections.unmodifiableList(dockApps);
         this.fillDock = fillDock;
         this.hiddenApps = Collections.unmodifiableList(hiddenApps);
@@ -154,6 +174,8 @@ final class Config {
         int skyIntensity = res.getInteger(R.integer.sky_intensity);
         int[] settingsKeycodes = res.getIntArray(R.array.settings_key_keycodes);
         boolean settingsKeyPanel = res.getBoolean(R.bool.settings_key_panel);
+        boolean showGreeting = res.getBoolean(R.bool.show_greeting);
+        String gridSort = res.getString(R.string.grid_sort).trim();
         boolean applied = false;
 
         File dir = dir(ctx);
@@ -188,6 +210,8 @@ final class Config {
             skyIntensity = integer(json, "sky_intensity", skyIntensity, 0, 100);
             settingsKeycodes = intArray(json, "settings_key_keycodes", settingsKeycodes);
             settingsKeyPanel = bool(json, "settings_key_panel", settingsKeyPanel);
+            showGreeting = bool(json, "show_greeting", showGreeting);
+            gridSort = string(json, "grid_sort", gridSort);
         }
         // A theme push or reset invalidates choices made on the TV. On first use, remember the
         // current theme without clearing choices from an older launcher version.
@@ -197,6 +221,19 @@ final class Config {
         if (chosenColumns >= 4 && chosenColumns <= 7) columns = chosenColumns;
         animations = choices.getBoolean("animations", animations);
         advancedEffects = choices.getBoolean("advanced_effects", advancedEffects);
+        reducedMotion = choices.getBoolean("reduced_motion", reducedMotion);
+        int chosenRows = choices.getInt("rows_below_dock", rowsBelow);
+        if (chosenRows >= 0 && chosenRows <= 3) rowsBelow = chosenRows;
+        dockRow = choices.getBoolean("dock_row", dockRow);
+        dockTitle = choices.getBoolean("dock_title", dockTitle);
+        gridSort = choices.getString("grid_sort", gridSort);
+        library = choices.getBoolean("app_library", library);
+        showGreeting = choices.getBoolean("show_greeting", showGreeting);
+        showStats = choices.getBoolean("show_stats", showStats);
+        background = backgroundColor(choices.getString("background", null), background);
+        int chosenSky = choices.getInt("sky_intensity", skyIntensity);
+        if (chosenSky >= 0 && chosenSky <= 100) skyIntensity = chosenSky;
+        if (!SORT_USAGE.equals(gridSort)) gridSort = SORT_ALPHA;
         File wallpaper = dir != null ? new File(dir, WALLPAPER_NAME) : null;
         if (wallpaper != null && !(wallpaper.isFile() && wallpaper.length() > 0)) wallpaper = null;
         // A theme can also switch the wallpaper off while the file is still there.
@@ -209,7 +246,31 @@ final class Config {
                 Math.max(1, columns), Math.max(0, rowsBelow), animations, advancedEffects,
                 shamsi, greetingName, moduleCards, reducedMotion, dockTitle, dockRow, reorderButton, vpn, homeSettings, showStats, library, background,
                 Math.max(0, Math.min(100, skyIntensity)), settingsKeycodes, settingsKeyPanel, wallpaper, applied,
-                festival);
+                festival, showGreeting, gridSort);
+    }
+
+    /** The colour for a stored background name; any other value keeps the theme's or config.xml's colour. */
+    static int backgroundColor(String name, int fallback) {
+        for (int i = 0; i < BACKGROUND_NAMES.length; i++) {
+            if (BACKGROUND_NAMES[i].equals(name)) return BACKGROUND_COLORS[i];
+        }
+        return fallback;
+    }
+
+    /** Whether any choice made on the TV is stored. */
+    static boolean hasChoices(SharedPreferences choices) {
+        for (String key : CHOICE_KEYS) if (choices.contains(key)) return true;
+        return false;
+    }
+
+    /** Removes every choice made on the TV (Restore defaults). Synchronous: Home is rebuilt right after. */
+    static void clearChoices(SharedPreferences choices) {
+        clearChoices(choices.edit()).commit();
+    }
+
+    private static SharedPreferences.Editor clearChoices(SharedPreferences.Editor editor) {
+        for (String key : CHOICE_KEYS) editor.remove(key);
+        return editor;
     }
 
     private static void syncThemeChoices(SharedPreferences choices, File dir, File config) {
@@ -221,12 +282,10 @@ final class Config {
             // Existing preferences survive an app upgrade, unless the first launch follows an
             // explicit theme push or reset by the updated tools.
             SharedPreferences.Editor editor = choices.edit();
-            if (!"absent".equals(token)) editor.remove("columns").remove("animations")
-                    .remove("advanced_effects");
+            if (!"absent".equals(token)) clearChoices(editor);
             editor.putString(THEME_SIGNATURE_KEY, signature).commit();
         } else if (!seen.equals(signature)) {
-            choices.edit().remove("columns").remove("animations").remove("advanced_effects")
-                    .putString(THEME_SIGNATURE_KEY, signature).commit();
+            clearChoices(choices.edit()).putString(THEME_SIGNATURE_KEY, signature).commit();
         }
     }
 

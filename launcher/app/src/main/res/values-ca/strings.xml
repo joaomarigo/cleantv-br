@@ -28,8 +28,6 @@
     <string name="advanced_effects">Efectes avançats</string>
     <string name="advanced_effects_state">Efectes avançats: %1$s</string>
     <string name="advanced_effects_warning">Eleva les targetes, amplia les icones i suavitza els canvis de color. Pot augmentar l’ús de memòria; depèn del televisor.</string>
-    <string name="follow_theme">Segueix el tema (restableix els ajustos)</string>
-    <string name="follow_theme_hint">Utilitza la disposició i els efectes del tema actual o els valors integrats. Aplicar o restablir un tema també esborra aquests ajustos.</string>
     <string name="tv_settings">Configuració del televisor</string>
     <string name="on">Activat</string>
     <string name="off">Desactivat</string>
@@ -45,8 +43,6 @@
     <string name="library_open">Obre</string>
     <string name="library_app_info">Informació de l’aplicació</string>
     <string name="library_save_failed">No s’ha pogut desar la drecera</string>
-    <string name="library_recent">Nova · Afegeix a l’inici</string>
-    <string name="library_hint_add">Prem per afegir a Inici · Mantén per a opcions</string>
     <string name="library_hint_open">Prem per obrir · Mantén per a opcions</string>
     <plurals name="library_app_count">
         <item quantity="one">%1$d aplicació</item>

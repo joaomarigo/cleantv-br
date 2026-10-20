@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Padrões para TVs com o sistema em português do Brasil. Sobrepõem res/values/config.xml só nas chaves abaixo;
+  um tema (config.json) e as escolhas feitas na TV continuam valendo por cima destes valores.
+-->
+<resources>
+    <!-- Dock: apps de streaming comuns no Brasil. Os que não estiverem instalados são pulados e a vaga é
+         preenchida pelos primeiros apps da grade (fill_dock). -->
+    <string-array name="dock_apps">
+        <item>com.netflix.ninja</item>
+        <item>com.google.android.youtube.tv</item>
+        <item>com.globo.globotv</item>
+        <item>com.amazon.amazonvideo.livingroom</item>
+    </string-array>
+
+    <!-- Botão Apps no topo e "Todos os apps" no fim da grade: busca, mais usados e recentes. -->
+    <bool name="app_library">true</bool>
+</resources>

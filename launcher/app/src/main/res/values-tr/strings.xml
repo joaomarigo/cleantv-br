@@ -55,8 +55,6 @@
     <string name="advanced_effects">Gelişmiş efektler</string>
     <string name="advanced_effects_state">Gelişmiş efektler: %1$s</string>
     <string name="advanced_effects_warning">Kutucukları yükseltir, simgeleri büyütür ve renk geçişlerini yumuşatır. Bellek kullanımını artırabilir; etki TV’ye bağlıdır.</string>
-    <string name="follow_theme">Temayı izle (TV seçimlerini sıfırla)</string>
-    <string name="follow_theme_hint">Geçerli temanın veya yerleşik ayarların düzenini ve hareketini kullanır. Tema uygulamak ya da sıfırlamak TV seçimlerini de temizler.</string>
     <string name="tv_settings">TV sistem ayarları</string>
     <string name="on">Açık</string>
     <string name="off">Kapalı</string>
@@ -72,8 +70,6 @@
     <string name="library_open">Aç</string>
     <string name="library_app_info">Uygulama bilgileri</string>
     <string name="library_save_failed">Kısayol kaydedilemedi</string>
-    <string name="library_recent">Yeni · Ana ekrana ekle</string>
-    <string name="library_hint_add">Ana ekrana eklemek için bas · Seçenekler için basılı tut</string>
     <string name="library_hint_open">Açmak için bas · Seçenekler için basılı tut</string>
     <plurals name="library_app_count">
         <item quantity="one">%1$d uygulama</item>

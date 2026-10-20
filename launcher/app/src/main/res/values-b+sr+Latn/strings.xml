@@ -36,8 +36,6 @@
     <string name="advanced_effects">Napredni efekti</string>
     <string name="advanced_effects_state">Napredni efekti: %1$s</string>
     <string name="advanced_effects_warning">Podiže pločice, uvećava ikone i ublažava prelaze boja. Može povećati potrošnju memorije, zavisno od TV-a.</string>
-    <string name="follow_theme">Prati temu (resetuj izbore)</string>
-    <string name="follow_theme_hint">Koristi raspored i animacije tekuće teme ili ugrađene vrednosti. Primena ili resetovanje teme briše i izbore na TV-u.</string>
     <string name="tv_settings">Sistemska podešavanja TV-a</string>
     <string name="on">Uklj.</string>
     <string name="off">Isklj.</string>
@@ -53,8 +51,6 @@
     <string name="library_open">Otvori</string>
     <string name="library_app_info">Informacije o aplikaciji</string>
     <string name="library_save_failed">Prečica nije sačuvana</string>
-    <string name="library_recent">Novo · Dodaj na početni ekran</string>
-    <string name="library_hint_add">Pritisni za početni ekran · Zadrži za opcije</string>
     <string name="library_hint_open">Pritisni za otvaranje · Zadrži za opcije</string>
     <plurals name="library_app_count">
         <item quantity="one">%1$d aplikacija</item>

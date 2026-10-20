@@ -203,6 +203,14 @@
                     android:drawableStart="@drawable/ic_wifi"
                     android:nextFocusDown="@+id/grid" />
 
+                <!-- All apps: search, every installed app, Most used and Recent (config app_library). -->
+                <TextView
+                    android:id="@+id/btnApps"
+                    style="@style/TopButton"
+                    android:text="@string/apps"
+                    android:drawableStart="@drawable/ic_apps"
+                    android:nextFocusDown="@+id/grid" />
+
                 <TextView
                     android:id="@+id/btnReorder"
                     style="@style/TopButtonIcon"

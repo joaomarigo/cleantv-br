@@ -55,8 +55,6 @@
     <string name="advanced_effects">تأثيرات متقدمة</string>
     <string name="advanced_effects_state">تأثيرات متقدمة: %1$s</string>
     <string name="advanced_effects_warning">ترفع البطاقات وتكبّر الأيقونات وتنعّم انتقالات الألوان. قد تزيد استهلاك الذاكرة حسب التلفاز.</string>
-    <string name="follow_theme">اتّباع السمة (إعادة ضبط الخيارات)</string>
-    <string name="follow_theme_hint">استخدم تخطيط السمة الحالية وحركتها أو القيم المضمّنة. تطبيق سمة أو إعادة ضبطها يمحو خيارات التلفاز أيضًا.</string>
     <string name="tv_settings">إعدادات نظام التلفاز</string>
     <string name="on">تشغيل</string>
     <string name="off">إيقاف</string>
@@ -72,8 +70,6 @@
     <string name="library_open">فتح</string>
     <string name="library_app_info">معلومات التطبيق</string>
     <string name="library_save_failed">تعذر حفظ الاختصار</string>
-    <string name="library_recent">جديد · إضافة إلى الرئيسية</string>
-    <string name="library_hint_add">اضغط للإضافة للرئيسية · اضغط مطولاً للخيارات</string>
     <string name="library_hint_open">اضغط للفتح · اضغط مطولاً للخيارات</string>
     <plurals name="library_app_count">
         <item quantity="zero">%1$d تطبيق</item>

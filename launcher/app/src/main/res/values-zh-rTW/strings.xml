@@ -33,8 +33,6 @@
     <string name="advanced_effects">進階效果</string>
     <string name="advanced_effects_state">進階效果：%1$s</string>
     <string name="advanced_effects_warning">加上圖塊浮起、圖示放大與背景顏色漸變。可能會多用一些記憶體，實際差異視電視而定。</string>
-    <string name="follow_theme">跟隨主題（重設電視上的選擇）</string>
-    <string name="follow_theme_hint">改用目前主題或內建的版面與動畫設定。推送或重設主題時，也會清除你在電視上做的這些選擇。</string>
     <string name="tv_settings">電視系統設定</string>
     <string name="on">開</string>
     <string name="off">關</string>
@@ -72,8 +70,6 @@
     <string name="library_open">開啟</string>
     <string name="library_app_info">應用程式資訊</string>
     <string name="library_save_failed">無法儲存捷徑</string>
-    <string name="library_recent">新安裝 · 新增至主畫面</string>
-    <string name="library_hint_add">按下以新增至主畫面 · 長按以顯示選項</string>
     <string name="library_hint_open">按下以開啟 · 長按以顯示選項</string>
     <plurals name="library_app_count">
         <item quantity="other">%1$d 個應用程式</item>

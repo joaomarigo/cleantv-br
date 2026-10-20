@@ -55,8 +55,6 @@
     <string name="advanced_effects">Расширенные эффекты</string>
     <string name="advanced_effects_state">Расширенные эффекты: %1$s</string>
     <string name="advanced_effects_warning">Приподнимает плитки, увеличивает значки и сглаживает переходы цвета. Может увеличить расход памяти; результат зависит от телевизора.</string>
-    <string name="follow_theme">Следовать теме (сбросить выбор)</string>
-    <string name="follow_theme_hint">Использовать параметры расположения и анимации текущей темы или встроенные. Установка или сброс темы также удаляет выбор на телевизоре.</string>
     <string name="tv_settings">Системные настройки ТВ</string>
     <string name="on">Вкл.</string>
     <string name="off">Выкл.</string>
@@ -72,8 +70,6 @@
     <string name="library_open">Открыть</string>
     <string name="library_app_info">О приложении</string>
     <string name="library_save_failed">Не удалось сохранить ярлык</string>
-    <string name="library_recent">Новое · Добавить на главный экран</string>
-    <string name="library_hint_add">Нажать: добавить на главный экран · Удержать: опции</string>
     <string name="library_hint_open">Нажать: открыть · Удержать: опции</string>
     <plurals name="library_app_count">
         <item quantity="one">%1$d приложение</item>

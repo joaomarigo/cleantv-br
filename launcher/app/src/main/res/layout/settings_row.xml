@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/SettingsRow"
+    android:layout_marginTop="10dp"
+    android:fontFamily="@font/outfit_regular"
+    android:singleLine="true"
+    android:ellipsize="end" />

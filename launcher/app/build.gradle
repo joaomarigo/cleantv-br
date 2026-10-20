@@ -10,8 +10,9 @@ android {
         applicationId 'com.gathin.tvhome'
         minSdk 26
         targetSdk 34
-        versionCode 5
-        versionName '2.4'
+        // Brazilian edition, same package as upstream so it installs over an existing launcher (see docs/CHANGELOG.md).
+        versionCode 6
+        versionName '2.4-br.1'
     }
 
     buildTypes {

@@ -32,8 +32,6 @@
     <string name="advanced_effects">Hiệu ứng nâng cao</string>
     <string name="advanced_effects_state">Hiệu ứng nâng cao: %1$s</string>
     <string name="advanced_effects_warning">Thêm hiệu ứng ô nổi lên, phóng to biểu tượng và chuyển màu mượt. Có thể tốn thêm bộ nhớ; mức chênh lệch tùy từng TV.</string>
-    <string name="follow_theme">Theo theme (xóa lựa chọn trên TV)</string>
-    <string name="follow_theme_hint">Dùng bố cục và hiệu ứng của theme hiện tại hoặc mặc định. Đẩy hoặc đặt lại theme cũng xóa các lựa chọn bạn đã chọn trên TV.</string>
     <string name="tv_settings">Cài đặt hệ thống TV</string>
     <string name="quick_picture">Hiển thị</string>
     <string name="quick_network">Mạng</string>
